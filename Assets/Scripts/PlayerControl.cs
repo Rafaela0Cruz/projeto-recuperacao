@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
+    Rigidbody2D rb;
+
+    void Start(){
+        rb = GetComponent<Rigidbody2D>();
+    }
+
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Coin")) {
             SFXManager.instance.ShowCoinParticles(other.gameObject);
             AudioManager.instance.PlaySoundCoinPickup(other.gameObject);
             Destroy(other.gameObject);
             LevelManager.instance.IncrementCoinCount();
+            Impulse(10);
         }
         if (other.gameObject.CompareTag("Gift")) {
             StopMusicAndTape();
@@ -37,4 +44,14 @@ public class PlayerControl : MonoBehaviour
         Destroy(gameObject);   
         LevelManager.instance.ShowGameOverPanel();     
     }
+
+    void Impulse(float force){
+        rb.velocity = Vector3.zero;
+        rb.AddForce(Vector3.up * force, ForceMode2D.Impulse);
+    }
+
+
+
+
+
 }
